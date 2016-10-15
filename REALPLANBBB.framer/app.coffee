@@ -1,14 +1,71 @@
 # Disable right-click context menu
+
+#creation de l'input recherche
+InputModule = require "input"
+
 if document.addEventListener?
 	document.addEventListener "contextmenu", (event) ->
 		event.preventDefault()
 
-_button = new Layer
-	backgroundColor: "white"
-	x: 10
-	y: Align.bottom
-	height: 90
-	width: 120
+#region : CLASS button
+class _button 
+	_createButton: (_x, _y, _height, _width) ->
+		_button = new Layer
+			x : _x
+			y : _y
+			height: _height
+			width: _width
+		return _button
+	_setBackGround: (_button, _background) ->
+		_button.background = _background
+	_setName : (name, _button) ->
+		_button.name = name
+
+#region : CLASS layout
+class _layout
+	_createLayout: (_x, _y, _height, _width) ->
+		_layout = new Layer
+			x : _x
+			y : _y
+			height: _height
+			width: _width
+		return _layout
+		
+	_setName : (name, _layout) ->
+		_layout.name = name
+	
+	_setBackGround: (background, _layout) ->
+		_layout.image = background
+		
+#region: CLASS input
+class _input	
+	_createInput: (_x, _y, _height, _width) ->
+		_input = new InputModule.Input
+			x : _x
+			y : _y
+			height : _height
+			width : _width
+		return _input
+		
+	_visibilityInput: (_input, _bool) -> _input.setup = _bool
+	_placeholder: (_input, _sentence) -> _input.placeholder = _sentence
+	_placeholderColor : (_input, _color) -> _input.placeholderColor = _color
+	_goButton: (_input, _bool) -> _input.goButtom = _bool 
+	
+createFirstPage = (_button, _input, _layout) ->
+	button = _button._createButton(10, Align.bottom, 90, 120)
+	_button._setBackGround(button, "white")
+	return button
+	
+main = () ->
+	_button = new _button
+	_input = new _input
+	_layout = new _layout
+		
+	return createFirstPage(_button, _input, _layout)
+	
+_button = main()
+
 	
 # print la map
 printBackground = new Layer
@@ -26,9 +83,6 @@ printSearch = new Layer
 	width: 790
 	height: 130
 	image: "images/begin.png"
-
-#creation de l'input recherche
-InputModule = require "input"
 
 emailInput = new InputModule.Input
 	setup : false
