@@ -18,8 +18,7 @@ class _button
 		return _button
 	_setBackGround: (_button, _background) ->
 		_button.background = _background
-	_setName : (name, _button) ->
-		_button.name = name
+	_setName : (_button, name) -> _button.name = name
 
 #region : CLASS layout
 class _layout
@@ -31,14 +30,16 @@ class _layout
 			width: _width
 		return _layout
 		
-	_setName : (name, _layout) ->
+	_setName : (_layout, name) ->
 		_layout.name = name
-	
-	_setBackGround: (background, _layout) ->
+	_setBackGroundColor : (_layout, color) ->
+		_layout.backgroundColor = color
+	_setBackGround: (_layout, background) ->
 		_layout.image = background
+	_setColor : (_layout, _color) -> _layout.color = _color
 		
 #region: CLASS input
-class _input	
+class _input
 	_createInput: (_x, _y, _height, _width) ->
 		_input = new InputModule.Input
 			x : _x
@@ -46,106 +47,84 @@ class _input
 			height : _height
 			width : _width
 		return _input
-		
+	_setStyle : (_input, _color) -> _input.style.color = _color
 	_visibilityInput: (_input, _bool) -> _input.setup = _bool
 	_placeholder: (_input, _sentence) -> _input.placeholder = _sentence
 	_placeholderColor : (_input, _color) -> _input.placeholderColor = _color
 	_goButton: (_input, _bool) -> _input.goButtom = _bool 
+	_setName : (_input, name) -> _input.name = name
 	
-createFirstPage = (_button, _input, _layout) ->
-	button = _button._createButton(10, Align.bottom, 90, 120)
-	_button._setBackGround(button, "white")
-	return button
+createFirstPage = (_button, _input, _layout, pager) ->
+	
+	researchButton = _button._createButton(10, Align.bottom, 90, 120)
+	_button._setBackGround(researchButton, "white")
+	_button._setName(researchButton, "researchButton")
+
+	printMap = _layout._createLayout(Align.center, 154, 1100, 760)
+	_layout._setBackGround(printMap, "images/map1.png")
+	_layout._setName(printMap, "printMap")
+	
+	printTop = _layout._createLayout(Align.center, 25, 130, 790)
+	_layout._setBackGround(printTop, "images/begin.png")
+	_layout._setName(printTop, "printTop")
+	
+	searchInput = _input._createInput(80, 75, 50, 690)
+	_input._visibilityInput(searchInput, false)
+	_input._placeholder(searchInput, "Rechercher une adresse")
+	_input._placeholderColor(searchInput, "#333")
+	_input._goButton(searchInput, false)
+	_input._setStyle(searchInput, "blue")
+	_input._setName(searchInput, "searchInput")
+	
+	layout = _layout._createLayout(Align.center, 2, 20, 750)
+	_layout._setBackGround(layout, "images/layout.png")
+	_layout._setBackGroundColor(layout, "black")
+	_layout._setColor(layout, "black")
+	_layout._setName(layout, "layout")
+	
+	backEnd = _layout._createLayout(Align.center, Align.bottom, 90, 760)
+	_layout._setBackGround(backEnd, "images/layout2.png")
+	_layout._setName(backEnd, "backEnd")
+
+	pager.addPage printMap
+	pager.addChild researchButton
+	pager.addChild printTop
+	pager.addChild searchInput
+	pager.addChild layout
+	pager.addChild backEnd
+	pager.snapToPage printMap
+
+	secondMap = createSecondPage(_button, _input, _layout, pager)
+	pager.addPage secondMap
+	
+	researchButton.on Events.Click, (event, layer) ->
+		pager.snapToPage secondMap
+	
+createSecondPage = (_button, _input, _layout, pager) ->
+	
+	secondMap = _layout._createLayout(Align.center, 154, 1100, 750)
+	_layout._setBackGround(secondMap, "images/map-10A.png")
+	_layout._setName(secondMap, "secondMap")
+	
+	return secondMap
+	
 	
 main = () ->
+	
+	pager = new PageComponent
+		width: Screen.width
+		height: Screen.height
+		scrollVertical: true
+		scrollHorizontal: true
+	
 	_button = new _button
 	_input = new _input
 	_layout = new _layout
 		
-	return createFirstPage(_button, _input, _layout)
+	createFirstPage(_button, _input, _layout, pager)
 	
-_button = main()
-
 	
-# print la map
-printBackground = new Layer
-	x: Align.center
-	y: Align.center
-	width: 760
-	height: 1100
-	y: 154
-	image:"images/map1.png"
-
-#print le background blanc en haut
-printSearch = new Layer
-	x: Align.center
-	y: 25
-	width: 790
-	height: 130
-	image: "images/begin.png"
-
-emailInput = new InputModule.Input
-	setup : false
-	y: 80
-	x: 75
-	width: 690
-	height: 50
-	placeholder: "Rechercher une adresse"
-	placeholderColor:"#333"
-	goButtom: false
-
-#print la bare d'info tout en haut
-printLayout = new Layer
-	x: Align.center
-	y: 2
-	height: 20
-	width: 750
-	color: "black"
-	backgroundColor: "black"
-	image:"images/layout.png"
-
-#print la bare bottom
-printBack = new Layer
-	x: Align.center
-	y: Align.bottom
-	height: 90
-	width: 760
-	image:"images/layout2.png"
-
-#change la colour du text qu'on rentre dans l'input recherche
-emailInput.style =
-	color:"blue"
-	
-secondMap = new Layer
-	x: Align.center
-	y: Align.center
-	width: 750
-	height: 1100
-	y: 154
-	image: "images/map-10A.png"
-
-
-
-pager = new PageComponent
-	width: Screen.width
-	height: Screen.height
-	scrollVertical: false
-	scrollHorizontal: false
-
-pager.addPage printBackground
-pager.addChild _button
-pager.addChild printSearch
-pager.addChild emailInput
-pager.addChild printLayout
-pager.addChild printBack
-
-pager.addPage secondMap
-
-pager.snapToPage printBackground
-
-
-_button.on Events.Click, (event, layer) ->
-	pager.snapToPage secondMap
+main()
 	
 
 	
