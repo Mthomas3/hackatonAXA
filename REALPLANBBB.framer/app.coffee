@@ -58,5 +58,7 @@ emailInput.style =
 #jsais pas ce que ça fait
 emailInput.on Events.Click, ->
 	emailInput.focus()
+	@print value
+
 
 
