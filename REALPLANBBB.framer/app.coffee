@@ -2,7 +2,14 @@
 if document.addEventListener?
 	document.addEventListener "contextmenu", (event) ->
 		event.preventDefault()
-		
+
+_button = new Layer
+	backgroundColor: "white"
+	x: 10
+	y: Align.bottom
+	height: 90
+	width: 120
+	
 # print la map
 printBackground = new Layer
 	x: Align.center
@@ -54,11 +61,43 @@ printBack = new Layer
 #change la colour du text qu'on rentre dans l'input recherche
 emailInput.style =
 	color:"blue"
+	
+secondMap = new Layer
+	x: Align.center
+	y: Align.center
+	width: 750
+	height: 1100
+	y: 154
+	image: "images/map-10A.png"
 
-#jsais pas ce que ça fait
-emailInput.on Events.Click, ->
-	emailInput.focus()
-	@print value
 
 
+pager = new PageComponent
+	width: Screen.width
+	height: Screen.height
+	scrollVertical: false
+	scrollHorizontal: false
 
+pager.addPage printBackground
+pager.addChild _button
+pager.addChild printSearch
+pager.addChild emailInput
+pager.addChild printLayout
+pager.addChild printBack
+
+pager.addPage secondMap
+
+pager.snapToPage printBackground
+
+
+_button.on Events.Click, (event, layer) ->
+	pager.snapToPage secondMap
+	
+
+	
+	
+	
+	
+	
+	
+	
