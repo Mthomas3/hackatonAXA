@@ -60,6 +60,10 @@ createFirstPage = (_button, _input, _layout, pager) ->
 	
 	buttonGreen = _button._createButton(300, 650, 150, 150)
 	_button._setBackGroundColor(buttonGreen, "transparent")
+	
+	redButton = _button._createButton(350, 200, 150, 150)
+	redButton.backgroundColor = "transparent"
+	
 	buttonGreen.delay = 2
 		
 	
@@ -88,6 +92,19 @@ createFirstPage = (_button, _input, _layout, pager) ->
 	layerA = new Layer
 		image: "images/popover.png"
 	layerA.visible = false
+	
+	layerRed = new Layer
+		image: "images/popover.png"
+	layerRed.visible = false
+	
+	animationRed = new Animation layerRed,
+		x: 10
+		y : 450
+		height: 165
+		width: Screen.width - 20
+		options:
+			curve: "spring-dho(800, 200, 10, 0.01)"
+	
 
 	animationA = new Animation layerA,
 		x: 10
@@ -97,13 +114,16 @@ createFirstPage = (_button, _input, _layout, pager) ->
 		options:
 			curve: "spring-dho(800, 200, 10, 0.01)"
 		
-	
+	redButton.on Events.Click, (event, layer) ->
+		layerRed.visible = true
+		animationRed.start()
+		
+	redButton.on Events.DoubleTap, (event, layer) ->
+		layerRed.destroy()
 	
 	buttonGreen.on Events.Click, (event, layer) ->
 	#_button._setBackGroundColor(charreButton, "transparent")
 		layerA.visible = true
-		
-		
 		animationA.start()
 		
 	
@@ -157,7 +177,6 @@ createFirstPage = (_button, _input, _layout, pager) ->
 	pager.snapToPage printMap
 
 	secondMap = createSecondPage(_button, _input, _layout, pager)
-	
 	thirdMap = createThirdPage(_button, _input, _layout, pager)
 	
 	pager.addPage secondMap
@@ -170,8 +189,10 @@ createFirstPage = (_button, _input, _layout, pager) ->
 		layerA.visible = false
 		layerB.visible = false
 		LayerC.visible = false
+		layerRed.visible = false
 		pager.snapToPage thirdMap
-		
+	
+	
 	backButton = _button._createButton(600, Align.bottom, 100, 200)
 	backButton.backgroundColor = "transparent"
 	backButton.on Events.Click, (event, layout) ->
@@ -211,9 +232,6 @@ main = () ->
 	_button = new _button
 	_input = new _input
 	_layout = new _layout
-	
-
-			
 	
 	createFirstPage(_button, _input, _layout, pager)
 	
