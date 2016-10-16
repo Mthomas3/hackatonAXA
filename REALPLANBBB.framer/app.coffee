@@ -97,13 +97,7 @@ createFirstPage = (_button, _input, _layout, pager) ->
 		options:
 			curve: "spring-dho(800, 200, 10, 0.01)"
 		
-	charreButton = _button._createButton(10, 500, 100,(Screen.width - 20))
-	charreButton.backgroundColor = "transparent"
-	charreButton.on Events.Click, (event, layout) ->
-		layerA.destroy()
-		layerB.destroy()
-		LayerC.destroy()
-		pager.snapToPage secondMap
+	
 	
 	buttonGreen.on Events.Click, (event, layer) ->
 	#_button._setBackGroundColor(charreButton, "transparent")
@@ -163,19 +157,42 @@ createFirstPage = (_button, _input, _layout, pager) ->
 	pager.snapToPage printMap
 
 	secondMap = createSecondPage(_button, _input, _layout, pager)
+	
+	thirdMap = createThirdPage(_button, _input, _layout, pager)
+	
 	pager.addPage secondMap
 	
+	pager.addPage thirdMap
 	
+	charreButton = _button._createButton(10, 500, 100,(Screen.width - 20))
+	charreButton.backgroundColor = "transparent"
+	charreButton.on Events.Click, (event, layout) ->
+		layerA.visible = false
+		layerB.visible = false
+		LayerC.visible = false
+		pager.snapToPage thirdMap
+		
+	backButton = _button._createButton(600, Align.bottom, 100, 200)
+	backButton.backgroundColor = "transparent"
+	backButton.on Events.Click, (event, layout) ->
+		layerA.visible = false
+		layerB.visible = true
+		LayerC.visible = true
+		pager.snapToPage printMap
+		
 	researchButton.on Events.Click, (event, layer) ->
 		layerA.destroy()
 		layerB.destroy()
 		LayerC.destroy()
 		pager.snapToPage secondMap
+
+createThirdPage = (_button, _input, _layout, pager) ->
+	third = _layout._createLayout(Align.center, 154, 1100, 750)
+	_layout._setBackGround(third, "images/artisan.png")
+	_layout._setName(third, "thirdMap")
+	return third
 	
-createSecondPage = (_button, _input, _layout, pager) ->
-	
-	
-	
+createSecondPage = (_button, _input, _layout, pager) ->	
 	secondMap = _layout._createLayout(Align.center, 154, 1100, 750)
 	_layout._setBackGround(secondMap, "images/map-10A.png")
 	_layout._setName(secondMap, "secondMap")
@@ -188,8 +205,8 @@ main = () ->
 	pager = new PageComponent
 		width: Screen.width
 		height: Screen.height
-		scrollVertical: true
-		scrollHorizontal: true
+		scrollVertical: false
+		scrollHorizontal: false
 	
 	_button = new _button
 	_input = new _input
