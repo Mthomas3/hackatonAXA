@@ -19,6 +19,8 @@ class _button
 	_setBackGround: (_button, _background) ->
 		_button.background = _background
 	_setName : (_button, name) -> _button.name = name
+	_setBackGroundColor: (_button, _background)->
+		_button.backgroundColor = _background
 
 #region : CLASS layout
 class _layout
@@ -56,10 +58,69 @@ class _input
 	
 createFirstPage = (_button, _input, _layout, pager) ->
 	
+	buttonGreen = _button._createButton(300, 650, 150, 150)
+	_button._setBackGroundColor(buttonGreen, "transparent")
+		
+	
+	layerB = new Layer
+		backgroundColor: "rgba(0,0,255,0.3)"
+		x: 255
+		y : 820
+		height: 120
+		width: 120
+	
+	layerB.borderRadius = layerB.width / 2
+	
+	animationB = new Animation layerB,
+		x: 210
+		y : 790
+		rotation: 360
+		height: 200
+		width: 200
+		options:
+			curve: "spring-dho(5, 4, -0.00.1, 0.01)"
+
+	animationB.start()
+	animationB.on Events.AnimationEnd, ->
+		animationB.restart()
+		
+	layerA = new Layer
+		image: "images/popover.png"
+	layerA.visible = false
+
+	animationA = new Animation layerA,
+		x: 10
+		y : 450
+		height: 165
+		width: Screen.width - 20
+		options:
+			curve: "spring-dho(800, 200, 10, 0.01)"
+	
+	
+	
+	buttonGreen.on Events.Click, (event, layer) ->
+		layerA.visible = true
+
+		animationA.start()
+		
+	
+	buttonGreen.on Events.DoubleTap, (event, layer) ->
+		layerA.destroy()
+
+	LayerC = new Layer
+		image: "images/location.png"
+		x: 260
+		y: 830
+		height: 100
+		width: 100
+
+	charreButton = _button._createButton(10, Align.center, 200, (Screen.width - 20))
+	#_button._setBackGroundColor(charreButton, "transparent")
+			
 	researchButton = _button._createButton(10, Align.bottom, 90, 120)
 	_button._setBackGround(researchButton, "white")
 	_button._setName(researchButton, "researchButton")
-
+	
 	printMap = _layout._createLayout(Align.center, 154, 1100, 760)
 	_layout._setBackGround(printMap, "images/map1.png")
 	_layout._setName(printMap, "printMap")
@@ -98,9 +159,14 @@ createFirstPage = (_button, _input, _layout, pager) ->
 	pager.addPage secondMap
 	
 	researchButton.on Events.Click, (event, layer) ->
+		layerA.destroy()
+		layerB.destroy()
+		LayerC.destroy()
 		pager.snapToPage secondMap
 	
 createSecondPage = (_button, _input, _layout, pager) ->
+	
+	
 	
 	secondMap = _layout._createLayout(Align.center, 154, 1100, 750)
 	_layout._setBackGround(secondMap, "images/map-10A.png")
@@ -120,7 +186,10 @@ main = () ->
 	_button = new _button
 	_input = new _input
 	_layout = new _layout
-		
+	
+
+			
+	
 	createFirstPage(_button, _input, _layout, pager)
 	
 	
