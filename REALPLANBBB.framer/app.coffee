@@ -60,6 +60,7 @@ createFirstPage = (_button, _input, _layout, pager) ->
 	
 	buttonGreen = _button._createButton(300, 650, 150, 150)
 	_button._setBackGroundColor(buttonGreen, "transparent")
+	buttonGreen.delay = 2
 		
 	
 	layerB = new Layer
@@ -72,8 +73,8 @@ createFirstPage = (_button, _input, _layout, pager) ->
 	layerB.borderRadius = layerB.width / 2
 	
 	animationB = new Animation layerB,
-		x: 210
-		y : 790
+		x: 211
+		y : 785
 		rotation: 360
 		height: 200
 		width: 200
@@ -95,12 +96,20 @@ createFirstPage = (_button, _input, _layout, pager) ->
 		width: Screen.width - 20
 		options:
 			curve: "spring-dho(800, 200, 10, 0.01)"
-	
-	
+		
+	charreButton = _button._createButton(10, 500, 100,(Screen.width - 20))
+	charreButton.backgroundColor = "transparent"
+	charreButton.on Events.Click, (event, layout) ->
+		layerA.destroy()
+		layerB.destroy()
+		LayerC.destroy()
+		pager.snapToPage secondMap
 	
 	buttonGreen.on Events.Click, (event, layer) ->
+	#_button._setBackGroundColor(charreButton, "transparent")
 		layerA.visible = true
-
+		
+		
 		animationA.start()
 		
 	
@@ -114,8 +123,6 @@ createFirstPage = (_button, _input, _layout, pager) ->
 		height: 100
 		width: 100
 
-	charreButton = _button._createButton(10, Align.center, 200, (Screen.width - 20))
-	#_button._setBackGroundColor(charreButton, "transparent")
 			
 	researchButton = _button._createButton(10, Align.bottom, 90, 120)
 	_button._setBackGround(researchButton, "white")
@@ -157,6 +164,7 @@ createFirstPage = (_button, _input, _layout, pager) ->
 
 	secondMap = createSecondPage(_button, _input, _layout, pager)
 	pager.addPage secondMap
+	
 	
 	researchButton.on Events.Click, (event, layer) ->
 		layerA.destroy()
